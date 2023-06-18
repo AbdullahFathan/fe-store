@@ -45,6 +45,6 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
             ),
           ],
         ),
-        body: screens[_selectedIndex]);
+        body: SafeArea(child: screens[_selectedIndex]));
   }
 }
