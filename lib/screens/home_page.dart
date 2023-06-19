@@ -1,8 +1,10 @@
+import 'package:fe_store/cubit/product/product_cubit.dart';
 import 'package:fe_store/data/models/product_model.dart';
 import 'package:fe_store/screens/widgets/detail_card.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fe_store/config/theme_data.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -49,7 +51,9 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<ProductCubit>().getAllProduct();
+                        },
                         icon: const Icon(Icons.search),
                         label: Text(
                           'Search Some Item',
@@ -96,16 +100,45 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return DetailCard(
-                  witdhContainer: witdhContainer,
-                  productModel: dummyData,
+          BlocBuilder<ProductCubit, ProductState>(
+            builder: (context, state) {
+              if (state is ProductSuccess) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return DetailCard(
+                        witdhContainer: witdhContainer,
+                        productModel: state.productModel![index],
+                      );
+                    },
+                    childCount: state.productModel!.length,
+                  ),
                 );
-              },
-              childCount: 6,
-            ),
+              }
+
+              if (state is ProductLoading) {
+                return const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 75),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              if (state is ProductEror) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: Text("Cannot get data: ${state.erorText}"),
+                  ),
+                );
+              }
+
+              return SliverToBoxAdapter(child: Container());
+            },
           ),
         ],
       ),
