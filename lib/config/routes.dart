@@ -10,5 +10,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   "/homePage": (p0) => const HomePage(),
   "/cartPage": (p0) => const CartPage(),
   "/accountPage": (p0) => const AccountPage(),
-  "/detailPage": (p0) => DetailProductPage(),
+  "/detailPage": (p0) => const DetailProductPage(),
 };

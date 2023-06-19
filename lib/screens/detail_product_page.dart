@@ -1,7 +1,9 @@
 import 'package:fe_store/config/theme_data.dart';
+import 'package:fe_store/cubit/cart/cart_cubit.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fe_store/data/models/product_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailProductPage extends StatelessWidget {
   const DetailProductPage({
@@ -110,7 +112,9 @@ class DetailProductPage extends StatelessWidget {
                 child: Row(
                   children: [
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.read<CartCubit>().addItemToCart(productModel);
+                      },
                       icon: const Icon(Icons.add_shopping_cart_outlined),
                       label: Text(
                         'Add to Cart',
@@ -127,7 +131,11 @@ class DetailProductPage extends StatelessWidget {
                       width: 7,
                     ),
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        context
+                            .read<CartCubit>()
+                            .removeItemFromCart(productModel);
+                      },
                       icon: const Icon(Icons.remove_circle_outline_outlined),
                       label: Text(
                         'Remove Item',
