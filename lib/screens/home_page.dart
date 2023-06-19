@@ -1,5 +1,4 @@
 import 'package:fe_store/cubit/product/product_cubit.dart';
-import 'package:fe_store/data/models/product_model.dart';
 import 'package:fe_store/screens/widgets/detail_card.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +14,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isShow = false;
+
   @override
   Widget build(BuildContext context) {
     double witdhContainer = MediaQuery.of(context).size.width;
+    final watchState = context.watch<ProductCubit>();
+    bool isLoading = watchState.state is ProductLoading;
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -51,9 +53,11 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton.icon(
-                        onPressed: () {
-                          context.read<ProductCubit>().getAllProduct();
-                        },
+                        onPressed: (isLoading)
+                            ? null
+                            : () {
+                                context.read<ProductCubit>().getAllProduct();
+                              },
                         icon: const Icon(Icons.search),
                         label: Text(
                           'Search Some Item',
@@ -63,7 +67,9 @@ class _HomePageState extends State<HomePage> {
                           fixedSize: Size(witdhContainer * 0.7, 50),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
-                          backgroundColor: raisinBlackColor,
+                          backgroundColor: (isLoading)
+                              ? raisinBlackColor.withOpacity(0.4)
+                              : raisinBlackColor,
                         ),
                       ),
                       Material(
@@ -158,19 +164,21 @@ class FilterWidget extends StatefulWidget {
 }
 
 class _FilterWidgetState extends State<FilterWidget> {
-  String dropdownValue = 'All';
+  String categoryValue = 'electronics';
   List<String> categoryList = [
-    'All',
-    'Electronics',
-    'Jewelery',
-    'Men`s clothing',
-    'Women`s clothing'
+    "electronics",
+    "jewelery",
+    "men's clothing",
+    "women's clothing"
   ];
 
   String limitValue = '1';
   List<String> limitList = ['1', '2', '3', '4', '5'];
+
   @override
   Widget build(BuildContext context) {
+    final watchState = context.watch<ProductCubit>();
+    bool isLoading = watchState.state is ProductLoading;
     return Container(
       width: widget.witdhContainer,
       height: 120,
@@ -199,7 +207,11 @@ class _FilterWidgetState extends State<FilterWidget> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     padding: const EdgeInsets.only(left: 5),
-                    value: dropdownValue,
+                    value: (isLoading) ? null : categoryValue,
+                    disabledHint: const Text(
+                      "Loading..",
+                      style: TextStyle(fontSize: 14),
+                    ),
                     items: categoryList
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -212,8 +224,11 @@ class _FilterWidgetState extends State<FilterWidget> {
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        dropdownValue = newValue!;
+                        categoryValue = newValue!;
                       });
+                      context
+                          .read<ProductCubit>()
+                          .getProductByCategory(categoryValue, limitValue);
                     },
                   ),
                 ),
@@ -239,7 +254,11 @@ class _FilterWidgetState extends State<FilterWidget> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     padding: const EdgeInsets.only(left: 5),
-                    value: limitValue,
+                    value: (isLoading) ? null : limitValue,
+                    disabledHint: const Text(
+                      "Loading..",
+                      style: TextStyle(fontSize: 14),
+                    ),
                     items:
                         limitList.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -254,6 +273,9 @@ class _FilterWidgetState extends State<FilterWidget> {
                       setState(() {
                         limitValue = newValue!;
                       });
+                      context
+                          .read<ProductCubit>()
+                          .getProductByCategory(categoryValue, limitValue);
                     },
                   ),
                 ),

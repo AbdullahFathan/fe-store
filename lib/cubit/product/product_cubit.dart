@@ -22,4 +22,22 @@ class ProductCubit extends Cubit<ProductState> {
     }
     return [];
   }
+
+  Future<List<ProductModel>?> getProductByCategory(
+    String category,
+    String limit,
+  ) async {
+    try {
+      emit(ProductLoading());
+      var response =
+          await _productRepository.fecthProductByCategory(category, limit);
+
+      response != null
+          ? emit(ProductSuccess(response))
+          : emit(ProductEror(erorText: "Fail get list product"));
+    } catch (eror) {
+      emit(ProductEror(erorText: eror.toString()));
+    }
+    return [];
+  }
 }
