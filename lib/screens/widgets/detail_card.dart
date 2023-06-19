@@ -21,7 +21,6 @@ class DetailCard extends StatelessWidget {
         margin: const EdgeInsets.only(top: 10),
         padding: const EdgeInsets.symmetric(horizontal: 5),
         width: witdhContainer,
-        height: 170,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
@@ -30,7 +29,6 @@ class DetailCard extends StatelessWidget {
           children: [
             Image.network(
               productModel.image,
-              height: 170,
               width: 130,
             ),
             const SizedBox(
