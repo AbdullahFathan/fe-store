@@ -2,15 +2,11 @@
 
 A new Flutter project.
 
-## Getting Started
+Normal Store and cart apps build with flutter, Cubit State Management, FakeApiStore API
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Get Product from API
+- Filter product by category and limit to show
+- add and remove item in cart
+- Sum price in cart
